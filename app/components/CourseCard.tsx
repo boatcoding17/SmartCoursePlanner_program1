@@ -9,6 +9,7 @@ interface Course {
   startTime: string;
   endTime: string;
   prereq?: string;
+  description?: string;
 }
 
 interface CourseCardProps {
@@ -16,9 +17,10 @@ interface CourseCardProps {
   isAdded: boolean;
   onAdd: (course: Course) => void;
   getDayLabel: (day: string) => string;
+  onViewDetails: (course: Course) => void; // เพิ่มฟังก์ชันนี้เข้ามารับคำสั่งคลิก
 }
 
-export default function CourseCard({ course, isAdded, onAdd, getDayLabel }: CourseCardProps) {
+export default function CourseCard({ course, isAdded, onAdd, getDayLabel, onViewDetails }: CourseCardProps) {
   return (
     <div className={`p-3 bg-white border border-gray-200 rounded-xl flex justify-between items-center hover:border-emerald-300 transition-all ${
       course.status === 'locked' ? 'bg-gray-50 border-gray-200 opacity-60' : 
@@ -28,6 +30,13 @@ export default function CourseCard({ course, isAdded, onAdd, getDayLabel }: Cour
         <div className="flex items-center gap-2">
           <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{course.id}</span>
           <span className="text-sm font-semibold text-gray-900">{course.name}</span>
+          {/* ปุ่มข้อความสีฟ้าสำหรับกดดูรายละเอียด */}
+          <button 
+            onClick={() => onViewDetails(course)}
+            className="text-[11px] text-indigo-600 hover:text-indigo-800 hover:underline font-medium ml-2 cursor-pointer"
+          >
+            🔍 ดูรายละเอียดวิชา
+          </button>
         </div>
         <p className="text-xs text-gray-500 mt-1">
           {course.credits} นก. | <span className="text-indigo-600">วัน{getDayLabel(course.day)} {course.startTime}-{course.endTime} น.</span>
