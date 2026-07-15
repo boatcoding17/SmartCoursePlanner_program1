@@ -97,7 +97,7 @@ export default function LoginPage() {
 
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="block text-xs font-bold text-emerald-950 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-emerald-950 tracking-wider">
                   รหัสผ่าน เช่น mju374
                 </label>
               </div>
