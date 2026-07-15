@@ -111,18 +111,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* ส่วนเลือกจดจำฉัน */}
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                type="checkbox"
-                className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500 accent-emerald-600"
-              />
-              <label htmlFor="remember-me" className="ml-2 text-xs text-gray-600 font-medium cursor-pointer">
-                จดจำการเข้าสู่ระบบในเครื่องนี้
-              </label>
-            </div>
-
             {/* ปุ่มล็อกอิน */}
             <button
               type="submit"
