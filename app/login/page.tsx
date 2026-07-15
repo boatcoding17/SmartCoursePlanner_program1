@@ -98,7 +98,7 @@ export default function LoginPage() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-xs font-bold text-emerald-950 uppercase tracking-wider">
-                  รหัสผ่าน (MIS MJU)
+                  รหัสผ่าน เช่น mju374
                 </label>
               </div>
               <input
