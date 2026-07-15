@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import api from "@/src/axios"; // 🚀 1. ดึงตัวเชื่อมสายแลน Axios ที่เราสร้างไว้มาใช้
 
 export default function LoginPage() {
   const router = useRouter();
@@ -10,25 +11,46 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // ฟังก์ชันจำลองการกดล็อกอิน (ในอนาคตจะยิง API ไปหา Laravel หลังบ้าน)
-  const handleLogin = (e: React.FormEvent) => {
+  // 🚀 2. ปรับฟังก์ชันล็อกอินให้ยิง API ไปหา Laravel จริง
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
-    // ตรวจสอบข้อมูลเบื้องต้น (Validation)
+    // ตรวจสอบข้อมูลเบื้องต้น
     if (!studentId || !password) {
       setError("❌ กรุณากรอกรหัสนักศึกษาและรหัสผ่านให้ครบถ้วน");
       setIsLoading(false);
       return;
     }
 
-    // จำลองการโหลดส่งข้อมูล 1.5 วินาที
-    setTimeout(() => {
+    try {
+      // 📡 ยิง POST request ข้ามไปที่หลังบ้าน Laravel (http://127.0.0.1:8000/api/login)
+      const response = await api.post("/login", {
+        student_id: studentId,
+        password: password,
+      });
+
+      if (response.data.status === "success") {
+        const studentData = response.data.student;
+        
+        // 💡 [Trick] เซฟข้อมูลนักศึกษาเก็บไว้ใน Browser (LocalStorage) 
+        // หน้าอื่นจะได้ดึงไปโชว์ได้ว่า "ยินดีต้อนรับ คุณสมันตชัย"
+        localStorage.setItem("user", JSON.stringify(studentData));
+
+        // ล็อกอินผ่านแล้ว เด้งไปหน้าจัดตารางเรียนหลักทันที!
+        router.push("/");
+      }
+    } catch (err: any) {
+      // ❌ ถ้ารหัสผิด หรือหลังบ้านมีปัญหาจะตกมาที่นี่
+      if (err.response && err.response.data) {
+        setError(`❌ ${err.response.data.message}`);
+      } else {
+        setError("❌ ไม่สามารถเชื่อมต่อกับระบบหลังบ้าน Laravel ได้");
+      }
+    } finally {
       setIsLoading(false);
-      // เมื่อล็อกอินสำเร็จ ให้เด้งไปหน้าจัดตารางเรียนหลัก
-      router.push("/");
-    }, 1500);
+    }
   };
 
   return (
@@ -52,7 +74,7 @@ export default function LoginPage() {
 
           {/* ข้อความแสดงข้อผิดพลาด (ถ้ามี) */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium animate-shake">
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium">
               {error}
             </div>
           )}

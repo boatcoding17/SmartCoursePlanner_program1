@@ -1,15 +1,18 @@
 "use client";
 
+// 💡 ปรับให้ตรงตามโครงสร้าง API หลังบ้าน
 interface Course {
-  id: string;
+  id: number;
+  course_id: string; // รหัสวิชา เช่น 10301111
   name: string;
   credits: number;
-  status: string;
   day: string;
-  startTime: string;
-  endTime: string;
+  start_time: string; // ตัวเล็กผสมขีดล่างตาม DB
+  end_time: string;   // ตัวเล็กผสมขีดล่างตาม DB
+  status?: string;    
   prereq?: string;
   description?: string;
+  color: string;
 }
 
 interface CourseCardProps {
@@ -17,7 +20,7 @@ interface CourseCardProps {
   isAdded: boolean;
   onAdd: (course: Course) => void;
   getDayLabel: (day: string) => string;
-  onViewDetails: (course: Course) => void; // เพิ่มฟังก์ชันนี้เข้ามารับคำสั่งคลิก
+  onViewDetails: (course: Course) => void;
 }
 
 export default function CourseCard({ course, isAdded, onAdd, getDayLabel, onViewDetails }: CourseCardProps) {
@@ -28,9 +31,9 @@ export default function CourseCard({ course, isAdded, onAdd, getDayLabel, onView
     }`}>
       <div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{course.id}</span>
+          {/* 💡 เปลี่ยนจาก course.id เป็น course.course_id */}
+          <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{course.course_id}</span>
           <span className="text-sm font-semibold text-gray-900">{course.name}</span>
-          {/* ปุ่มข้อความสีฟ้าสำหรับกดดูรายละเอียด */}
           <button 
             onClick={() => onViewDetails(course)}
             className="text-[11px] text-indigo-600 hover:text-indigo-800 hover:underline font-medium ml-2 cursor-pointer"
@@ -39,7 +42,8 @@ export default function CourseCard({ course, isAdded, onAdd, getDayLabel, onView
           </button>
         </div>
         <p className="text-xs text-gray-500 mt-1">
-          {course.credits} นก. | <span className="text-indigo-600">วัน{getDayLabel(course.day)} {course.startTime}-{course.endTime} น.</span>
+          {/* 💡 ปรับเวลาเป็น start_time และ end_time */}
+          {course.credits} นก. | <span className="text-indigo-600">วัน{getDayLabel(course.day)} {course.start_time.substring(0,5)}-{course.end_time.substring(0,5)} น.</span>
           {course.prereq && <span className="text-amber-600 font-medium ml-2">⚠️ ต้องผ่าน {course.prereq}</span>}
         </p>
       </div>
