@@ -122,7 +122,7 @@ export default function PlannerPage() {
 
         {/* บล็อกที่ 2: ผังตารางเรียนจำลองด้วยระบบ CSS Grid */}
         <div className="bg-white rounded-xl shadow p-6 border border-gray-100 space-y-4">
-          <h2 className="font-bold text-gray-900">🗓️ ผังตารางเรียนจำลองระบบ MIS</h2>
+          <h2 className="font-bold text-gray-900">🗓️ ทดสอบตารางเรียน</h2>
           <div className="overflow-x-auto">
             <div className="min-w-[800px] border border-gray-200 rounded-lg overflow-hidden">
               <div className="grid grid-cols-9 bg-gray-100 text-center text-xs font-bold text-gray-600 border-b border-gray-200">
