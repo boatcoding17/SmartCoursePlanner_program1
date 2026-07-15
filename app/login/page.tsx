@@ -100,7 +100,6 @@ export default function LoginPage() {
                 <label className="block text-xs font-bold text-emerald-950 uppercase tracking-wider">
                   รหัสผ่าน (MIS MJU)
                 </label>
-                <a href="#" className="text-[11px] text-amber-600 hover:underline font-medium">ลืมรหัสผ่าน?</a>
               </div>
               <input
                 type="password"
