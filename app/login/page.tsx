@@ -40,13 +40,13 @@ export default function LoginPage() {
           student_id: studentData.student_id,
           name: studentData.name,
           major: studentData.major,
-          year: studentData.year, // ⚡ ดึงค่าชั้นปีจากฐานข้อมูลมาเซฟลงเครื่องตรงนี้เลย
+          year: studentData.year, // ⚡ ดึงค่าชั้นปีมาเซฟลงเครื่องตรงนี้
         };
         
         localStorage.setItem("user", JSON.stringify(userData));
         
-        // 🚀 ล็อกอินผ่านแล้ว เด้งไปหน้าจัดตารางเรียนหลักทันทีแบบม้วนเดียวจบ!
-        router.push("/planner");
+        // 🚀 แก้ไขทิศทางตรงนี้: เปลี่ยนจาก /planner เป็น / (หน้าหลัก app/page.tsx) 
+        router.push("/");
       } else {
         setError("❌ ระบบตอบกลับข้อมูลไม่ถูกต้อง");
       }
