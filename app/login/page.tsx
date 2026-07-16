@@ -31,15 +31,24 @@ export default function LoginPage() {
       });
 
       // 💡 แกะค่าแบบยืดหยุ่น ถ้าหลังบ้านส่งค่ากลับมาผ่านฉลุย
-      if (response.data) {
+      if (response.data && response.data.status === "success") {
         // ดึงถังข้อมูลผู้ใช้ (รองรับทั้งแบบตรง ๆ และแบบยัดไส้ในฟิลด์ .user หรือ .student)
         const studentData = response.data.user || response.data.student || response.data;
         
         // 💾 เซฟข้อมูลนักศึกษาเก็บไว้ใน Browser (LocalStorage)
-        localStorage.setItem("user", JSON.stringify(studentData));
-
-        // ล็อกอินผ่านแล้ว เด้งไปหน้าจัดตารางเรียนหลักทันที!
-        router.push("/");
+        const userData = {
+          student_id: studentData.student_id,
+          name: studentData.name,
+          major: studentData.major,
+          year: studentData.year, // ⚡ ดึงค่าชั้นปีจากฐานข้อมูลมาเซฟลงเครื่องตรงนี้เลย
+        };
+        
+        localStorage.setItem("user", JSON.stringify(userData));
+        
+        // 🚀 ล็อกอินผ่านแล้ว เด้งไปหน้าจัดตารางเรียนหลักทันทีแบบม้วนเดียวจบ!
+        router.push("/planner");
+      } else {
+        setError("❌ ระบบตอบกลับข้อมูลไม่ถูกต้อง");
       }
     } catch (err: any) {
       console.error("Login Client Error:", err);
@@ -48,7 +57,6 @@ export default function LoginPage() {
       if (err.response && err.response.data) {
         setError(`❌ ${err.response.data.message || err.response.data.error || "รหัสผ่านไม่ถูกต้อง"}`);
       } else {
-        // อัปเดตคำพูดแจ้งเตือนให้ไม่ติดยี่ห้อ Laravel แล้ว
         setError("❌ ไม่สามารถเชื่อมต่อกับระบบหลังบ้าน Next.js Serverless ได้");
       }
     } finally {
