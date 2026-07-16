@@ -42,13 +42,17 @@ export default function PlannerPage() {
     }
   }, [router]);
 
-  // 🚀 2. ยิง API ดึงข้อมูลวิชาเรียน (จะทำงานเมื่อล็อกอินผ่านแล้ว)
+  // 🚀 2. ยิง API ดึงข้อมูลวิชาเรียนจากคลาวด์ Supabase
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
       api.get("/courses")
         .then((response) => {
-          if (response.data.status === "success") {
+          // 💡 ปรับใหม่: เนื่องจาก Supabase ดึงข้อมูลผ่าน PostgreSQL จะส่งออกมาเป็น Array รายวิชาตรงๆ 
+          if (Array.isArray(response.data)) {
+            setCourses(response.data);
+          } else if (response.data && Array.isArray(response.data.data)) {
+            // ดักเผื่อกรณีมี wrapper object ครอบในอนาคต
             setCourses(response.data.data);
           }
         })
@@ -89,14 +93,6 @@ export default function PlannerPage() {
 
   const timeConflicts = checkTimeConflicts();
 
-  // 🔍 ฟังก์ชันตรวจสอบวิชาในตาราง
-  const getCoursesAtSlot = (day: string, time: string) => {
-    return selectedCourses.filter(c => {
-      const slotTime = time + ":00";
-      return c.day === day && slotTime >= c.start_time && slotTime < c.end_time;
-    });
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 pb-12 relative">
       <Navbar />
@@ -107,16 +103,20 @@ export default function PlannerPage() {
         <div className="bg-white rounded-xl shadow p-6 border border-gray-100">
           <h2 className="font-bold text-gray-900 mb-4 text-emerald-800">📚 รายวิชาเอกวิทยาการคอมพิวเตอร์ที่เปิดให้เลือกเรียน</h2>
           <div className="space-y-2">
-            {courses.map((course) => (
-              <CourseCard 
-                key={course.id}
-                course={course}
-                isAdded={selectedCourses.some((c) => c.course_id === course.course_id)}
-                onAdd={addToPlan}
-                getDayLabel={getDayLabel}
-                onViewDetails={(c) => setActiveDetailsCourse(c)}
-              />
-            ))}
+            {courses.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-4">กำลังโหลดข้อมูลวิชาเรียนจาก Supabase...</p>
+            ) : (
+              courses.map((course) => (
+                <CourseCard 
+                  key={course.id}
+                  course={course}
+                  isAdded={selectedCourses.some((c) => c.course_id === course.course_id)}
+                  onAdd={addToPlan}
+                  getDayLabel={getDayLabel}
+                  onViewDetails={(c) => setActiveDetailsCourse(c)}
+                />
+              ))
+            )}
           </div>
         </div>
 
@@ -237,23 +237,13 @@ export default function PlannerPage() {
               </div>
             )}
 
-            {totalCredits >= 9 && totalCredits <= 22 && timeConflicts.length === 0 && (
+            {totalCredits > 0 && totalCredits >= 9 && totalCredits <= 22 && timeConflicts.length === 0 && (
               <div className="p-3 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-200/50 font-medium text-sm">
                 ✨ โครงสร้างเวลาและจำนวนหน่วยกิตถูกต้องตามเกณฑ์ เข้าเงื่อนไขลงทะเบียนปกติเรียบร้อยครับ
               </div>
             )}
           </div>
 
-          <button 
-            disabled={selectedCourses.length === 0 || totalCredits < 9 || totalCredits > 22 || timeConflicts.length > 0} 
-            className={`w-full mt-4 py-3.5 rounded-xl font-bold text-sm shadow-sm transition-all ${
-              (selectedCourses.length === 0 || totalCredits < 9 || totalCredits > 22 || timeConflicts.length > 0) 
-                ? 'bg-gray-200 text-gray-400 border border-gray-300 cursor-not-allowed shadow-none' 
-                : 'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white hover:from-emerald-700 hover:to-emerald-800 shadow-md transform hover:-translate-y-0.5 active:translate-y-0'
-            }`}
-          >
-            ยืนยันบันทึกแผนตารางเรียนนี้ เข้าสู่ระบบฐานข้อมูล
-          </button>
         </div>
 
       </div>

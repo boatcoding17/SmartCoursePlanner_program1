@@ -33,7 +33,8 @@ export default function Navbar() {
         <div className="text-sm bg-emerald-800 px-4 py-2 rounded-lg border border-emerald-600 flex flex-col items-end">
           {studentInfo ? (
             <>
-              <span className="font-bold">🧑‍🎓 {studentInfo.first_name} {studentInfo.last_name}</span>
+              {/* 🟢 แก้ไขตรงนี้: เปลี่ยนมาดึงจาก studentInfo.name ตัวจบตัวเดียวที่รวมชื่อ-นามสกุลแล้ว */}
+              <span className="font-bold">🧑‍🎓 {studentInfo.name || `รหัส ${studentInfo.student_id}`}</span>
               <span className="text-[11px] text-emerald-300">ชั้นปีที่ {studentInfo.year} | {studentInfo.major}</span>
             </>
           ) : (

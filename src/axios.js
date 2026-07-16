@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-    // 🚀 เปลี่ยนจาก localhost เป็นลิงก์ Render ตัวจริงของเรา
-    baseURL: 'https://smartcourseplanner-program1b.onrender.com/api', 
-    withCredentials: true, 
+    // 💡 เปลี่ยนมาชี้เข้าหาโฟลเดอร์ api ใน Next.js ตัวเราเอง
+    baseURL: '/api', 
+    // 💡 เอาออกได้เลยครับ เพราะอยู่บนโดเมนเดียวกันแล้ว ไม่ต้องแชร์ Cookie ข้ามค่าย
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
