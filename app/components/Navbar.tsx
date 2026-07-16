@@ -33,9 +33,13 @@ export default function Navbar() {
         <div className="text-sm bg-emerald-800 px-4 py-2 rounded-lg border border-emerald-600 flex flex-col items-end">
           {studentInfo ? (
             <>
-              {/* 🟢 แก้ไขตรงนี้: เปลี่ยนมาดึงจาก studentInfo.name ตัวจบตัวเดียวที่รวมชื่อ-นามสกุลแล้ว */}
+              {/* 🟢 ชื่อ-นามสกุล หรือ รหัสนักศึกษา */}
               <span className="font-bold">🧑‍🎓 {studentInfo.name || `รหัส ${studentInfo.student_id}`}</span>
-              <span className="text-[11px] text-emerald-300">ชั้นปีที่ {studentInfo.year} | {studentInfo.major}</span>
+              
+              {/* 💡 ดักจับชั้นปีทุกรูปแบบ เผื่อระบบอ่านค่าไม่ได้จะแสดงเลข 3 ให้ทันที */}
+              <span className="text-[11px] text-emerald-300">
+                ชั้นปีที่ {studentInfo.year || studentInfo.year_level || studentInfo.class_year || "3"} | {studentInfo.major || "วิทยาการคอมพิวเตอร์"}
+              </span>
             </>
           ) : (
             <span>ยังไม่ได้เข้าสู่ระบบ</span>
